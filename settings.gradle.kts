@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Pokemon Blitz"
-include(":app")
- 
+include(":app", ":backend")
