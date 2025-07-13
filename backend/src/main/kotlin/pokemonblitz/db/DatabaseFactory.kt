@@ -27,9 +27,8 @@ object DatabaseFactory {
         val flyway = Flyway.configure()
             .dataSource(dataSource)
             .locations("classpath:db/migration")
-            .baselineOnMigrate(true)
             .load()
-        flyway.migrate() // Aplica las migraciones registradas :contentReference[oaicite:1]{index=1}
+            .migrate()
 
         // Conecta Exposed usando el dataSource
         Database.connect(dataSource)

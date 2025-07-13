@@ -21,7 +21,7 @@ h2 = "2.3.232"
 ktor = "3.2.1"
 logback = "1.4.14"
 postgres = "42.7.7"
-flyway = "11.10.0"
+flyway = "11.10.2"
 
 [libraries]
 # Android

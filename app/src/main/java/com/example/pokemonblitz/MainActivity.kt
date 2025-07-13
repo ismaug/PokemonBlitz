@@ -29,10 +29,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-fun main() {
-    DatabaseFactory.init()
-    // ... iniciar Ktor
-}
+//fun main() {
+//    DatabaseFactory.init()
+//    // ... iniciar Ktor
+//}
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(

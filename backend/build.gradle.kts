@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.flyway)
     kotlin("jvm")
 }
 
