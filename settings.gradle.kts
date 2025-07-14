@@ -18,11 +18,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-    versionCatalogs {
-        create("libs") {
-            from(files("gradle/libs.versions.toml"))
-        }
-    }
+    // 💡 No versionCatalogs block needed here
 }
 
 rootProject.name = "Pokemon Blitz"

@@ -7,15 +7,17 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.flywaydb.core.Flyway
 
+
+
 object DatabaseFactory {
     fun init() {
         // Configuración del pool de conexiones
         val config = HikariConfig().apply {
             driverClassName = "org.postgresql.Driver"
             jdbcUrl = System.getenv("JDBC_DATABASE_URL")
-                ?: "jdbc:postgresql://localhost:5432/pkmnquiz"
+                ?: "jdbc:postgresql://localhost:5432/pokemonblitz"
             username = System.getenv("DB_USER") ?: "postgres"
-            password = System.getenv("DB_PASSWORD") ?: "tu_pass"
+            password = System.getenv("DB_PASSWORD") ?: "salem"
             maximumPoolSize = 10
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
