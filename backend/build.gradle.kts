@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ktor)
-    alias(libs.plugins.flyway)
     application
     kotlin("jvm")
 }
@@ -11,6 +10,7 @@ version = "1.0"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true", "-Dio.ktor.config=application.yaml")
 }
 
 dependencies {
@@ -25,19 +25,13 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.hikaricp)
-    implementation(libs.flyway.core)
-
     implementation(libs.postgresql)
     implementation(libs.logback.classic)
-
+    implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.ktor.server.test.host)
 }
-flyway {
-    url = System.getenv("JDBC_DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/pokemonblitz"
-    user = System.getenv("DB_USER") ?: "postgres"
-    password = System.getenv("DB_PASSWORD") ?: "salem"
-    locations = arrayOf("filesystem:src/main/resources/db/migration")
-    driver = "org.postgresql.Driver"
-}
+
+
+
 

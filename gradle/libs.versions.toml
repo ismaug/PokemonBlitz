@@ -21,7 +21,7 @@ h2 = "2.3.232"
 ktor = "3.2.1"
 logback = "1.4.14"
 postgres = "42.7.7"
-flyway = "11.10.2"
+
 
 [libraries]
 # Android
@@ -61,7 +61,8 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
-flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+
+
 
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -72,4 +73,3 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
