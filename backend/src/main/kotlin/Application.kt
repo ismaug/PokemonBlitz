@@ -44,5 +44,6 @@ fun Application.module() {
     configureSerialization()
     configureHTTP()
     configureMonitoring()
+    JwtConfig.configureKtorFeature(this)
     configureRouting()
 }
