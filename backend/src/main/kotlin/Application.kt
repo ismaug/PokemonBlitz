@@ -3,11 +3,12 @@ import com.example.configureMonitoring
 import com.example.configureRouting
 import com.example.configureSerialization
 import io.ktor.server.application.*
-import io.ktor.server.routing.*
 import io.ktor.server.response.*
-import io.ktor.http.*
-import services.UserService
-import services.ScoreService
+import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
+import services.insertSampleData
+import services.users
 
 
 fun main(args: Array<String>) {
@@ -16,25 +17,26 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     Databases.connectToPostgres(environment.config)
+
+    // Solo insertar si no hay usuarios
+    val hasUsers = transaction {
+        !users.selectAll().empty()
+    }
+
+    if (!hasUsers) {
+        insertSampleData()
+        println("⚡ Datos de ejemplo insertados automáticamente.")
+    } else {
+        println("ℹ️ Usuarios ya existen. No se insertó nada.")
+    }
+
     routing {
         get("/") {
             call.respondText("🚀 Servidor conectado a PostgreSQL")
         }
     }
-    environment.monitor.subscribe(ApplicationStarted) {
-        val user1 = UserService.insertUser("ash", "ash@poke.com", "pikachu123")
-        val user2 = UserService.insertUser("misty", "misty@poke.com", "togepi123")
 
-        ScoreService.insertScore(user1, score = 3, correctAnswers = 3, time = 45)
-        ScoreService.insertScore(user1, score = 2, correctAnswers = 2, time = 60)
-
-        ScoreService.insertScore(user2, score = 4, correctAnswers = 4, time = 50)
-        ScoreService.insertScore(user2, score = 5, correctAnswers = 5, time = 40)
-
-        println("Datos insertados correctamente.")
-    }
     configureSerialization()
-
     configureHTTP()
     configureMonitoring()
     configureRouting()
