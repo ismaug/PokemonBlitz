@@ -1,6 +1,6 @@
 [versions]
 # Android
-agp = "8.9.3"
+agp = "8.11.1"
 hikaricp = "5.0.1"
 kotlin = "2.1.10"
 coreKtx = "1.16.0"

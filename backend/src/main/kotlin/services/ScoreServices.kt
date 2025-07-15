@@ -6,6 +6,8 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SortOrder
+
 
 object scores : UUIDTable() {
     val userId = reference("user_id", users)
@@ -31,6 +33,23 @@ object ScoreService {
             scores.select(condition).toList()
         }
     }
+    fun getTop5Scores(): List<Triple<String, Int, Int>> {
+        return transaction {
+            scores
+                .innerJoin(users, { scores.userId }, { users.id })
+                .selectAll()
+                .orderBy(scores.score to SortOrder.DESC, scores.time to SortOrder.ASC)
+                .limit(5)
+                .map {
+                    Triple(
+                        it[users.username],
+                        it[scores.score],
+                        it[scores.time]
+                    )
+                }
+        }
+    }
 }
+
 
 

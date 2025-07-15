@@ -7,7 +7,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import services.ScoreService
 import services.insertSampleData
+import services.scores
 import services.users
 
 
@@ -18,7 +20,7 @@ fun main(args: Array<String>) {
 fun Application.module() {
     Databases.connectToPostgres(environment.config)
 
-    // Solo insertar si no hay usuarios
+    // Solo inserta si no hay usuarios
     val hasUsers = transaction {
         !users.selectAll().empty()
     }
@@ -28,6 +30,10 @@ fun Application.module() {
         println("⚡ Datos de ejemplo insertados automáticamente.")
     } else {
         println("ℹ️ Usuarios ya existen. No se insertó nada.")
+        val topScores = ScoreService.getTop5Scores()
+        topScores.forEachIndexed { index, (username, score, time) ->
+            println("🏅 #${index + 1}: $username - Score: $score - Time: $time sec")
+        }
     }
 
     routing {
