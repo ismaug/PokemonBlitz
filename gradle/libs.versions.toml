@@ -1,6 +1,7 @@
 [versions]
 # Android
 agp = "8.11.1"
+bcrypt = "0.10.2"
 hikaricp = "5.0.1"
 kotlin = "2.1.10"
 coreKtx = "1.16.0"
@@ -26,6 +27,7 @@ postgres = "42.7.7"
 [libraries]
 # Android
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

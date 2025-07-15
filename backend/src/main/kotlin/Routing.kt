@@ -14,11 +14,13 @@ import java.sql.Connection
 import java.sql.DriverManager
 import org.jetbrains.exposed.sql.*
 import org.slf4j.event.*
+import routes.userRoutes
 
 fun Application.configureRouting() {
     routing {
         get("/") {
             call.respondText("Hello World!")
         }
+        userRoutes()
     }
 }

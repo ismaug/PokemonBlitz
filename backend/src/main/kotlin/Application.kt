@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import services.ScoreService
 import services.insertSampleData
-import services.scores
 import services.users
 
 
