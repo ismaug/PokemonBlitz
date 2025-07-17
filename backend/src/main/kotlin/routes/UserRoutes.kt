@@ -11,6 +11,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Contextual
 import java.util.UUID
 import JwtConfig
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.selectAll
 
@@ -77,5 +80,28 @@ fun Route.userRoutes() {
         }
     }
 
-    // 🔜 Aqui pones el manejo del jwt rafaela del futuro
+    // ✅ Ruta protegida /me
+    authenticate {
+        get("/me") {
+            val principal = call.principal<JWTPrincipal>()
+            val userId = principal!!.payload.getClaim("userId").asString()
+
+            val user = transaction {
+                users.selectAll().firstOrNull { it[users.id].value.toString() == userId }
+            }
+
+            if (user == null) {
+                call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
+            } else {
+                call.respond(
+                    mapOf(
+                        "id" to user[users.id].value.toString(),
+                        "username" to user[users.username],
+                        "email" to user[users.email]
+                    )
+                )
+            }
+        }
+    }
+
 }
