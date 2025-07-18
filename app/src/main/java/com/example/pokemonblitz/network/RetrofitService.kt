@@ -10,4 +10,8 @@ data class LoginResponse(val token: String, val expiresIn: Long)
 interface ApiService {
     @POST("/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
+
+    @POST("/register")
+    suspend fun register(@Body request: Map<String, String>): Response<Unit>
+
 }
