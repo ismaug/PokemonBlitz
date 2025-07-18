@@ -1,37 +1,55 @@
 package com.example.pokemonblitz.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import androidx.lifecycle.*
 import com.example.pokemonblitz.data.UserPreferences
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import com.example.pokemonblitz.network.LoginRequest
+import com.example.pokemonblitz.network.RetrofitInstance
 import kotlinx.coroutines.launch
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
+class LoginViewModel(
+    context: Context
+) : ViewModel() {
 
-    private val preferences = UserPreferences(application.applicationContext)
+    private val prefs = UserPreferences(context)
 
-    // StateFlow del token actual
-    val tokenFlow: StateFlow<String?> = preferences.token
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    private val _loginStatus = MutableLiveData<String?>()
+    val loginStatus: LiveData<String?> = _loginStatus
 
-    // Función para guardar token
-    fun saveTokenToPrefs(token: String) {
+    fun login(email: String, password: String) {
         viewModelScope.launch {
-            preferences.saveToken(token)
+            try {
+                val response = RetrofitInstance.api.login(LoginRequest(email, password))
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        prefs.saveToken(it.token)
+                        _loginStatus.value = "Token recibido ✅"
+                    } ?: run {
+                        _loginStatus.value = "Respuesta vacía ❌"
+                    }
+                } else {
+                    _loginStatus.value = "Login inválido ❌"
+                }
+            } catch (e: Exception) {
+                _loginStatus.value = "Error: ${e.localizedMessage}"
+            }
         }
     }
 
-    // Función para borrar token (logout)
-    fun clearToken() {
-        viewModelScope.launch {
-            preferences.clearToken()
+    fun clearStatus() {
+        _loginStatus.value = null
+    }
+}
+
+// Crea el viewmodel para insertar en LoginScreen
+class LoginViewModelFactory(
+    private val context: Context
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return LoginViewModel(context) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

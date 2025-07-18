@@ -1,22 +1,31 @@
 package com.example.pokemonblitz.screens
 
-import LoginViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokemonblitz.R
+import com.example.pokemonblitz.ui.LoginViewModel
+import com.example.pokemonblitz.ui.LoginViewModelFactory
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = viewModel()) {
+fun LoginScreen() {
+    val context = LocalContext.current
+    val viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(context.applicationContext)
+    )
+    val loginStatus by viewModel.loginStatus.observeAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -39,7 +48,7 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel()) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Username") },
+            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -58,7 +67,7 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel()) {
 
         Button(
             onClick = {
-                viewModel.saveTokenToPrefs("fake-token-${System.currentTimeMillis()}")
+                viewModel.login(email, password)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,8 +78,12 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = { /* TODO: Ir a RegisterScreen */ }) {
-            Text("Don't have account? Sign up")
+        loginStatus?.let {
+            Text(it, color = MaterialTheme.colorScheme.secondary)
+        }
+
+        TextButton(onClick = { /* TODO: Register screen */ }) {
+            Text("Don't have an account? Sign up")
         }
     }
 }
