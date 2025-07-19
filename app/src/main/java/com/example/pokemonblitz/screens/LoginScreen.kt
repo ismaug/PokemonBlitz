@@ -2,7 +2,6 @@ package com.example.pokemonblitz.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -10,20 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.pokemonblitz.R
+import com.example.pokemonblitz.navigation.NavDestinations
 import com.example.pokemonblitz.ui.LoginViewModel
 import com.example.pokemonblitz.ui.LoginViewModelFactory
+import com.example.pokemonblitz.ui.components.MyTextField
+import com.example.pokemonblitz.ui.components.PrimaryButton
+import com.example.pokemonblitz.ui.components.TitleText
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
-    val viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(context.applicationContext)
-    )
+    val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context.applicationContext))
     val loginStatus by viewModel.loginStatus.observeAsState()
 
     var email by remember { mutableStateOf("") }
@@ -37,43 +37,23 @@ fun LoginScreen() {
     ) {
         Image(painter = painterResource(id = R.drawable.pikachu), contentDescription = "Pikachu")
         Spacer(modifier = Modifier.height(8.dp))
-        Text("POKEBLITZ", style = MaterialTheme.typography.headlineMedium)
-
+        TitleText("POKEBLITZ")
         Spacer(modifier = Modifier.height(24.dp))
-
         Text("Sign In", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
+        MyTextField(value = email, onValueChange = { email = it }, label = "Email")
         Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
+        MyTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            label = "Password",
+            isPassword = true
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                viewModel.login(email, password)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
-            Text("Login")
+        PrimaryButton("Login") {
+            viewModel.login(email, password)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -82,8 +62,10 @@ fun LoginScreen() {
             Text(it, color = MaterialTheme.colorScheme.secondary)
         }
 
-        TextButton(onClick = { /* TODO: Register screen */ }) {
-            Text("Don't have an account? Sign up")
+        TextButton(onClick = {
+            navController.navigate(NavDestinations.Register)
+        }) {
+            Text("No tienes cuenta? Regístrate")
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.example.pokemonblitz.ui
 
+import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.pokemonblitz.network.RetrofitInstance
 import kotlinx.coroutines.launch
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(context: Context) : ViewModel() {
 
     // Campos del formulario
     var username by mutableStateOf("")
@@ -27,7 +29,6 @@ class RegisterViewModel : ViewModel() {
         usernameError = username.length !in 3..12
         emailError = email.isBlank()
         passwordError = password.isBlank()
-
         return !(usernameError || emailError || passwordError)
     }
 
@@ -49,4 +50,14 @@ class RegisterViewModel : ViewModel() {
             }
         }
     }
+
+    fun resetStatus() {
+        registerSuccess = null
+    }
 }
+class RegisterViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return RegisterViewModel(context) as T
+    }
+}
+

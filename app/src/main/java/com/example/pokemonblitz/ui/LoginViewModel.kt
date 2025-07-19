@@ -41,7 +41,7 @@ class LoginViewModel(
     }
 }
 
-// Crea el viewmodel para insertar en LoginScreen
+// Este es el factory y crea el viewmodel para insertar en LoginScreen
 class LoginViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {
