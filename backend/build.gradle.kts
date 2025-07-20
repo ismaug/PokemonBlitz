@@ -21,7 +21,7 @@ dependencies {
     implementation(libs.ktor.server.default.headers)
     implementation(libs.ktor.server.cors)
     implementation(libs.ktor.server.call.logging)
-
+    implementation(libs.exposed.javatime)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.hikaricp)

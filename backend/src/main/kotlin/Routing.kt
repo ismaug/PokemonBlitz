@@ -14,6 +14,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import org.jetbrains.exposed.sql.*
 import org.slf4j.event.*
+import routes.scoreRoutes
 import routes.userRoutes
 
 fun Application.configureRouting() {
@@ -22,5 +23,6 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
         userRoutes()
+        scoreRoutes()
     }
 }
