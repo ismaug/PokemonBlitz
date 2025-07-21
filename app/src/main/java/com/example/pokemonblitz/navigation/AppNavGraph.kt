@@ -30,13 +30,27 @@ fun AppNavGraph(
     ) {
         composable(NavDestinations.Login) {
             LoginScreen(
-                navController = navController
+                onLoginSuccess = {
+                    navController.navigate(NavDestinations.Home) {
+                        popUpTo(NavDestinations.Login) { inclusive = true }
+                    }
+                },
+                onRegisterClick = {
+                    navController.navigate(NavDestinations.Register)
+                }
             )
         }
 
         composable(NavDestinations.Register) {
             RegisterScreen(
-                navController = navController
+                onRegisterSuccess = {
+                    navController.navigate(NavDestinations.Home) {
+                        popUpTo(NavDestinations.Register) { inclusive = true }
+                    }
+                },
+                onAlreadyHaveAccount = {
+                    navController.popBackStack()
+                }
             )
         }
 

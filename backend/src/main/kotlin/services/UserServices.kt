@@ -13,7 +13,6 @@ object users : UUIDTable() {
     val password = varchar("password", 100)
 }
 
-
 object UserService {
     fun insertUser(username: String, email: String, password: String): UUID {
         return transaction {
@@ -24,15 +23,17 @@ object UserService {
             }.value
         }
     }
+
+    // ✅ Función corregida - sintaxis alternativa más común
     fun getUserById(id: UUID): ResultRow? {
         return transaction {
-            users.select (users.id eq id ).firstOrNull()
+            users.select(users.id eq id).firstOrNull()
         }
     }
+
     fun getAllUsers(): List<ResultRow> {
         return transaction {
             users.selectAll().toList()
         }
     }
 }
-

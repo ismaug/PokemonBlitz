@@ -14,9 +14,9 @@ import JwtConfig
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.selectAll
-
 @Serializable
 data class RegisterRequest(val username: String, val email: String, val password: String)
 
@@ -87,19 +87,24 @@ fun Route.userRoutes() {
             val userId = principal!!.payload.getClaim("userId").asString()
             val uuid = UUID.fromString(userId)
 
-            val user = UserService.getUserById(uuid)
+            val userRow = transaction {
+                users
+                    .select ( users.id eq uuid )
+                    .firstOrNull()
+            }
 
-            if (user == null) {
+            if (userRow == null) {
                 call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
             } else {
                 call.respond(
                     mapOf(
-                        "id" to user[users.id].value.toString(),
-                        "username" to user[users.username],
-                        "email" to user[users.email]
+                        "id" to userRow[users.id].value.toString(),
+                        "username" to userRow[users.username],
+                        "email" to userRow[users.email]
                     )
                 )
             }
         }
     }
+
 }

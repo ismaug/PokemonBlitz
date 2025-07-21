@@ -18,7 +18,7 @@ class QuizViewModel : ViewModel() {
     val pokemonName: StateFlow<String> get() = _pokemonName
 
     // Imagen actual para mostrar (recurso drawable)
-    private val _guessedPokemonImageRes = MutableStateFlow(R.drawable.pokeballplaceholder)
+    private val _guessedPokemonImageRes = MutableStateFlow(R.drawable.pokeplaceholder)
     val guessedPokemonImageRes: StateFlow<Int> get() = _guessedPokemonImageRes
 
     // Score actual
@@ -75,7 +75,7 @@ class QuizViewModel : ViewModel() {
                 _guessResult.value = "Correct!"
                 _backgroundColor.value = Color(0xFF4CAF50) // Verde
             } else {
-                _guessedPokemonImageRes.value = R.drawable.pokeballplaceholder
+                _guessedPokemonImageRes.value = R.drawable.pokeplaceholder
                 _guessResult.value = "Incorrect!"
                 _backgroundColor.value = Color(0xFFE53935) // Rojo
             }
@@ -112,7 +112,7 @@ class QuizViewModel : ViewModel() {
         return when (name) {
             "pikachu" -> R.drawable.pikachu
             "squirtle" -> R.drawable.squirtle
-            else -> R.drawable.pokeballplaceholder
+            else -> R.drawable.pokeplaceholder
         }
     }
 
@@ -138,7 +138,7 @@ class QuizViewModel : ViewModel() {
     fun resetGame() {
         _score.value = 0
         _pokemonName.value = ""
-        _guessedPokemonImageRes.value = R.drawable.pokeballplaceholder
+        _guessedPokemonImageRes.value = R.drawable.pokeplaceholder
         _timeElapsed.value = 0
         _guessResult.value = null
         isTimerRunning = false
@@ -151,7 +151,7 @@ class QuizViewModel : ViewModel() {
         val score: Int = 0,
         val timeElapsed: Int = 0,
         val pokemonName: String = "",
-        val guessedPokemonImageRes: Int = R.drawable.pokeballplaceholder,
+        val guessedPokemonImageRes: Int = R.drawable.pokeplaceholder,
         val guessResult: String? = null,
         val backgroundColor: Color = Color(0xFF1D1E33)
     )
