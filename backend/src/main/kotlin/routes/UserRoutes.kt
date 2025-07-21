@@ -89,7 +89,8 @@ fun Route.userRoutes() {
 
             val userRow = transaction {
                 users
-                    .select ( users.id eq uuid )
+                    .select(users.id, users.username, users.email)
+                    .where { users.id eq uuid }
                     .firstOrNull()
             }
 
@@ -98,7 +99,7 @@ fun Route.userRoutes() {
             } else {
                 call.respond(
                     mapOf(
-                        "id" to userRow[users.id].value.toString(),
+                        "id" to userRow[users.id].toString(),
                         "username" to userRow[users.username],
                         "email" to userRow[users.email]
                     )
@@ -106,5 +107,4 @@ fun Route.userRoutes() {
             }
         }
     }
-
 }
