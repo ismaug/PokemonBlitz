@@ -3,6 +3,7 @@ package com.example.pokemonblitz.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -27,7 +28,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
-fun PlayScreen(viewModel: QuizViewModel = viewModel()) {
+fun PlayScreen(
+    onBackToHome: (() -> Unit)? = null,
+    viewModel: QuizViewModel = viewModel()
+) {
     var guess by remember { mutableStateOf("") }
     val pokemonName by viewModel.pokemonName.collectAsState()
     val guessResult by viewModel.guessResult.collectAsState()
@@ -122,7 +126,7 @@ fun PlayScreen(viewModel: QuizViewModel = viewModel()) {
             }
 
             Image(
-                painter = painterResource(id = R.drawable.pokeballplaceholder),
+                painter = painterResource(id = R.drawable.pokeplaceholder),
                 contentDescription = "Pokéball",
                 modifier = Modifier.size(100.dp)
             )
@@ -179,7 +183,14 @@ fun PlayScreen(viewModel: QuizViewModel = viewModel()) {
                 .background(Color.DarkGray)
                 .padding(8.dp)
         ) {
-            Text("🏠 Home", fontFamily = retroFont, color = Color.White)
+            Text(
+                "🏠 Home",
+                fontFamily = retroFont,
+                color = Color.White,
+                modifier = Modifier.clickable {
+                    onBackToHome?.invoke()
+                }
+            )
             Text("▶️ Quiz", fontFamily = retroFont, color = Color.White)
         }
     }

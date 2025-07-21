@@ -11,9 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.pokemonblitz.R
-import com.example.pokemonblitz.navigation.NavDestinations
 import com.example.pokemonblitz.ui.views.LoginViewModel
 import com.example.pokemonblitz.ui.views.LoginViewModelFactory
 import com.example.pokemonblitz.ui.components.MyTextField
@@ -21,13 +19,25 @@ import com.example.pokemonblitz.ui.components.PrimaryButton
 import com.example.pokemonblitz.ui.components.TitleText
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    onRegisterClick: () -> Unit
+) {
     val context = LocalContext.current
     val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context.applicationContext))
-    val loginStatus by viewModel.loginStatus.observeAsState()
+    val loginSuccess by viewModel.loginSuccess.observeAsState()
+    val errorMessage by viewModel.errorMessage.observeAsState()
+    val isLoading by viewModel.isLoading.observeAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // Observar el estado de login exitoso
+    LaunchedEffect(loginSuccess) {
+        if (loginSuccess == true) {
+            onLoginSuccess()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -58,13 +68,15 @@ fun LoginScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        loginStatus?.let {
-            Text(it, color = MaterialTheme.colorScheme.secondary)
+        errorMessage?.let {
+            Text(it, color = MaterialTheme.colorScheme.error)
         }
 
-        TextButton(onClick = {
-            navController.navigate(NavDestinations.Register)
-        }) {
+        if (isLoading == true) {
+            CircularProgressIndicator()
+        }
+
+        TextButton(onClick = onRegisterClick) {
             Text("No tienes cuenta? Regístrate")
         }
     }

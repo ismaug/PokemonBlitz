@@ -8,6 +8,7 @@ import java.time.Instant
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.time.format.DateTimeFormatter
+import java.time.ZoneId
 import java.util.UUID
 
 object scores : UUIDTable() {
@@ -56,7 +57,9 @@ object ScoreService {
                         score = row[scores.score],
                         time = row[scores.time],
                         correctAnswers = row[scores.correctAnswers],
-                        createdAt = formatter.format(row[scores.createdAt])
+                        createdAt = formatter.format(
+                            row[scores.createdAt].atZone(ZoneId.systemDefault()).toLocalDate()
+                        )
                     )
                 }
         }

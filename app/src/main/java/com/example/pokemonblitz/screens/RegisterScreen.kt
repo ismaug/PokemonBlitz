@@ -15,15 +15,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.pokemonblitz.R
-import com.example.pokemonblitz.navigation.NavDestinations
 import com.example.pokemonblitz.ui.views.RegisterViewModel
 import com.example.pokemonblitz.ui.views.RegisterViewModelFactory
 import com.example.pokemonblitz.ui.components.*
 
-
 @Composable
 fun RegisterScreen(
-    navController: NavController
+    onRegisterSuccess: () -> Unit,
+    onAlreadyHaveAccount: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: RegisterViewModel = viewModel(factory = RegisterViewModelFactory(context.applicationContext))
@@ -88,7 +87,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextButton(onClick = { navController.navigate(NavDestinations.Login) }) {
+            TextButton(onClick = onAlreadyHaveAccount) {
                 Text("¿Ya tienes cuenta? Inicia sesión")
             }
         }
@@ -101,7 +100,7 @@ fun RegisterScreen(
                     TextButton(onClick = {
                         viewModel.resetStatus()
                         if (registerSuccess) {
-                            navController.navigate("login")
+                            onRegisterSuccess()
                         }
                     }) {
                         Text("OK")
