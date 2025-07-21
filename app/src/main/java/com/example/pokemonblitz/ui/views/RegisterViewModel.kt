@@ -1,4 +1,4 @@
-package com.example.pokemonblitz.ui
+package com.example.pokemonblitz.ui.views
 
 import android.content.Context
 import androidx.compose.runtime.*

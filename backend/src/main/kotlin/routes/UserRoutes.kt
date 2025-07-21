@@ -85,10 +85,9 @@ fun Route.userRoutes() {
         get("/me") {
             val principal = call.principal<JWTPrincipal>()
             val userId = principal!!.payload.getClaim("userId").asString()
+            val uuid = UUID.fromString(userId)
 
-            val user = transaction {
-                users.selectAll().firstOrNull { it[users.id].value.toString() == userId }
-            }
+            val user = UserService.getUserById(uuid)
 
             if (user == null) {
                 call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
@@ -103,5 +102,4 @@ fun Route.userRoutes() {
             }
         }
     }
-
 }

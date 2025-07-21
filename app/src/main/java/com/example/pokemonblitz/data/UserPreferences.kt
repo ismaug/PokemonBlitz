@@ -10,30 +10,52 @@ import kotlinx.coroutines.flow.map
 // Extension para el contexto
 val Context.dataStore by preferencesDataStore(name = "user_prefs")
 
-// Clase para manejar preferencias
+// Claves
+val KEY_USER_ID = stringPreferencesKey("user_id")
+val KEY_USERNAME = stringPreferencesKey("username")
+val KEY_EMAIL = stringPreferencesKey("email")
+val KEY_TOKEN = stringPreferencesKey("auth_token")
+
+// Clase de manejo de DataStore
 class UserPreferences(private val context: Context) {
 
-    companion object {
-        private val TOKEN_KEY = stringPreferencesKey("auth_token")
+    // Flows para leer los valores
+    val userIdFlow: Flow<String?> = context.dataStore.data.map { it[KEY_USER_ID] }
+    val usernameFlow: Flow<String?> = context.dataStore.data.map { it[KEY_USERNAME] }
+    val emailFlow: Flow<String?> = context.dataStore.data.map { it[KEY_EMAIL] }
+    val tokenFlow: Flow<String?> = context.dataStore.data.map { it[KEY_TOKEN] }
+
+    // Guardar toda la información del usuario (incluyendo token)
+    suspend fun saveUserInfo(userId: String, username: String, email: String, token: String) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_USER_ID] = userId
+            preferences[KEY_USERNAME] = username
+            preferences[KEY_EMAIL] = email
+            preferences[KEY_TOKEN] = token
+        }
+    }
+    data class StoredUser(val id: String, val username: String, val email: String)
+
+    fun getUser(): Flow<StoredUser?> {
+        return context.dataStore.data.map { preferences ->
+            val id = preferences[KEY_USER_ID]
+            val username = preferences[KEY_USERNAME]
+            val email = preferences[KEY_EMAIL]
+            if (id != null && username != null && email != null) {
+                StoredUser(id, username, email)
+            } else {
+                null
+            }
+        }
     }
 
-    // Leer token como Flow
-    val token: Flow<String?> = context.dataStore.data
-        .map { preferences ->
-            preferences[TOKEN_KEY]
-        }
-
-    // Guardar token
-    suspend fun saveToken(token: String) {
+    // Borrar toda la información (para logout)
+    suspend fun clearUserInfo() {
         context.dataStore.edit { preferences ->
-            preferences[TOKEN_KEY] = token
-        }
-    }
-
-    // Borrar token (logout)
-    suspend fun clearToken() {
-        context.dataStore.edit { preferences ->
-            preferences.remove(TOKEN_KEY)
+            preferences.remove(KEY_USER_ID)
+            preferences.remove(KEY_USERNAME)
+            preferences.remove(KEY_EMAIL)
+            preferences.remove(KEY_TOKEN)
         }
     }
 }

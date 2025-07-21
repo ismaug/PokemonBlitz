@@ -14,8 +14,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pokemonblitz.R
 import com.example.pokemonblitz.navigation.NavDestinations
-import com.example.pokemonblitz.ui.LoginViewModel
-import com.example.pokemonblitz.ui.LoginViewModelFactory
+import com.example.pokemonblitz.ui.views.LoginViewModel
+import com.example.pokemonblitz.ui.views.LoginViewModelFactory
 import com.example.pokemonblitz.ui.components.MyTextField
 import com.example.pokemonblitz.ui.components.PrimaryButton
 import com.example.pokemonblitz.ui.components.TitleText

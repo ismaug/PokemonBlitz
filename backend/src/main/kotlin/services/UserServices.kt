@@ -2,6 +2,7 @@ package services
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
 
@@ -23,7 +24,11 @@ object UserService {
             }.value
         }
     }
-
+    fun getUserById(id: UUID): ResultRow? {
+        return transaction {
+            users.select (users.id eq id ).firstOrNull()
+        }
+    }
     fun getAllUsers(): List<ResultRow> {
         return transaction {
             users.selectAll().toList()

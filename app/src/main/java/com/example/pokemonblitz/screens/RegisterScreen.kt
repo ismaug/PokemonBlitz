@@ -16,8 +16,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.pokemonblitz.R
 import com.example.pokemonblitz.navigation.NavDestinations
-import com.example.pokemonblitz.ui.RegisterViewModel
-import com.example.pokemonblitz.ui.RegisterViewModelFactory
+import com.example.pokemonblitz.ui.views.RegisterViewModel
+import com.example.pokemonblitz.ui.views.RegisterViewModelFactory
 import com.example.pokemonblitz.ui.components.*
 
 
